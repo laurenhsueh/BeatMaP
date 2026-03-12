@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "mixed-reality-demo-main.slnx"
+    "dotnet.defaultSolution": "BeatMaPPP.slnx"
 }
