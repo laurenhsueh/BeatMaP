@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 
+// beat it
+
 public class GetLocation : MonoBehaviour
 {
     public TextMeshPro output; // Reference to a UI Text element
