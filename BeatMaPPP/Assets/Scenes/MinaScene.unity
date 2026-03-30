@@ -2973,6 +2973,7 @@ GameObject:
   - component: {fileID: 6468442521498317640}
   - component: {fileID: 87866911}
   - component: {fileID: 6873022368310924516}
+  - component: {fileID: 6873022368310924517}
   m_Layer: 2
   m_Name: XR Rig
   m_TagString: Untagged
@@ -4774,6 +4775,23 @@ CharacterController:
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.76072, z: 0}
 --- !u!114 &6873022368310924516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2218496723525162580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42b4e9c5ab6d2435a931684209555729, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GestureTracking
+  outText: {fileID: 236594274}
+  lDirections: {fileID: 1324810705}
+  rDirections: {fileID: 1661376862}
+  grabThreshold: 1
+  palmDownThreshold: 0.6
+--- !u!114 &6873022368310924517
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

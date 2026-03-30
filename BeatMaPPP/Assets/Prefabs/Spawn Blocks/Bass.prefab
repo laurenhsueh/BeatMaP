@@ -127,11 +127,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a739615b0ba20425bb26bd2685d76363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BassTrack
-  prefab: {fileID: 3001656413901574098}
+  prefab: {fileID: 1226845507414439109, guid: 59fe803100d734280b18a3d9a2b04a95, type: 3}
   minDistance: 1.5
   maxDistance: 3.5
   horizontalSpread: 1.5
   verticalSpread: 1.5
+  fadeInDuration: 0.5
+  fadeOutDuration: 0.5
+  lifetime: 10
 --- !u!54 &2028517264885792468
 Rigidbody:
   m_ObjectHideFlags: 0

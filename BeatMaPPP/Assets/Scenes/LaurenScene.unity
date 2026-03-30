@@ -2222,7 +2222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DisplayVisuals
   audioSource: {fileID: 1752881900}
-  jsonFileName: song_data.json
+  jsonFileName: never_gonna_analysis.json
   dominanceList: {fileID: 712611514}
   bassVisual: {fileID: 3859966379064788764, guid: 811cbf1b03edd44ceb8817a0161194bd, type: 3}
   drumsVisual: {fileID: 7542854739962909637, guid: a28da0ed932c5444c99ae56a44f6653c, type: 3}
@@ -3202,6 +3202,7 @@ GameObject:
   - component: {fileID: 6468442521498317640}
   - component: {fileID: 87866911}
   - component: {fileID: 6873022368310924516}
+  - component: {fileID: 6873022368310924517}
   m_Layer: 2
   m_Name: XR Rig
   m_TagString: Untagged
@@ -5019,6 +5020,18 @@ MonoBehaviour:
   rDirections: {fileID: 1661376862}
   grabThreshold: 1
   palmDownThreshold: 0.6
+--- !u!114 &6873022368310924517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2218496723525162580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c20e259abdaea41bab4265e1b0e25b99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlaneSpawnManager
 --- !u!114 &6873022368310924522
 MonoBehaviour:
   m_ObjectHideFlags: 0
