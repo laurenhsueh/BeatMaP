@@ -991,6 +991,94 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Hands",
+            "id": "2e39d90f-7bf8-4ada-b060-2d2861a11eb4",
+            "actions": [
+                {
+                    "name": "LeftGrab",
+                    "type": "Value",
+                    "id": "d35289fc-eb95-4f0e-8708-d036da291d40",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightGrab",
+                    "type": "Value",
+                    "id": "90a5163e-52fe-4427-b5a2-922261406048",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "LeftPinch",
+                    "type": "Value",
+                    "id": "70ef38b9-56f8-409f-b6b1-99f197c2bc7f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightPinch",
+                    "type": "Value",
+                    "id": "f964baf9-de6a-4f02-bec6-81219efaaa38",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "bbd582bb-ae79-4a52-85de-8d2cc06c62e8",
+                    "path": "<HandInteraction>{LeftHand}/graspValue",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftGrab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5a3bc440-4b30-46ed-87e2-bf6a4fc588a0",
+                    "path": "<HandInteraction>{RightHand}/graspValue",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightGrab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba04ba8e-a37e-4442-9d34-092ba47250ba",
+                    "path": "<HandInteraction>{LeftHand}/pinchValue",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftPinch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f1bb1f0e-284f-47a2-9950-f1792eabca2b",
+                    "path": "<HandInteraction>{RightHand}/pinchValue",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightPinch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
