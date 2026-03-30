@@ -162,7 +162,7 @@
       }
     },
     "com.unity.xr.arfoundation": {
-      "version": "6.4.1",
+      "version": "6.5.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
