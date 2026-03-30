@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using TMPro;
@@ -9,12 +12,14 @@ using UnityEngine.Networking;
 
 public class NavigationRoute : MonoBehaviour
 {
+    public static NavigationRoute Instance { get; private set; }
+
     [Header("References")]
     [SerializeField] private APIConfig apiConfig;
-    [SerializeField] private GetLocation getLocation;
 
-    [Header("Output (Optional)")]
+    [Header("Output")]
     [SerializeField] private TMP_Text outputText;
+    [SerializeField] private TMP_Text outputText2;
 
     [Header("Route")]
     [SerializeField] private string destinationAddress = "";
@@ -24,19 +29,42 @@ public class NavigationRoute : MonoBehaviour
 
     private const string DIRECTIONS_API_URL = "https://maps.googleapis.com/maps/api/directions/json";
 
-    private readonly List<Vector2> waypoints = new();
+    /// <summary>
+    /// Snapshot of the current route waypoints.
+    /// Exposed so LocationManager can use it for GPS movement simulation.
+    /// </summary>
+    public class RouteData
+    {
+        public List<GeoLocation> Waypoints = new List<GeoLocation>();
+    }
+
+    public RouteData CurrentRoute { get; private set; }
+    public int CurrentWaypointIndex => nextWaypointIndex;
+
+    private readonly List<GeoLocation> waypoints = new();
     private readonly List<string> waypointInstructions = new();
     private readonly List<string> waypointDistanceTexts = new();
     private int nextWaypointIndex;
+    private bool routeRequestInProgress;
+    private bool pendingRouteRequestAfterGps;
+    private bool subscribedToLocationUpdates;
 
     public bool HasRoute => waypoints.Count > 0;
-    public int NextWaypointIndex => nextWaypointIndex;
-    public Vector2? CurrentUserLatLon { get; private set; }
-    public Vector2? NextWaypointLatLon =>
-        nextWaypointIndex >= 0 && nextWaypointIndex < waypoints.Count ? waypoints[nextWaypointIndex] : null;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
 
     private void Start()
     {
+        SubscribeToLocationUpdates();
+
         if (autoRequestOnStart)
         {
             RequestWaypointList();
@@ -45,109 +73,184 @@ public class NavigationRoute : MonoBehaviour
         StartCoroutine(UpdateNextWaypointLoop());
     }
 
+    private void OnDestroy()
+    {
+        UnsubscribeFromLocationUpdates();
+    }
+
     public void RequestWaypointList()
     {
+        SubscribeToLocationUpdates();
+
+        if (routeRequestInProgress)
+        {
+            return;
+        }
+
         StartCoroutine(RequestWaypointListCoroutine());
     }
 
     private IEnumerator RequestWaypointListCoroutine()
     {
-        if (apiConfig == null)
+        routeRequestInProgress = true;
+        pendingRouteRequestAfterGps = false;
+
+        try
         {
-            apiConfig = Resources.Load<APIConfig>("APIConfig");
-        }
-
-        if (apiConfig == null || !apiConfig.HasGoogleMapsKey)
-        {
-            SetOutput("Missing API key. Assign APIConfig or place APIConfig.asset in Resources.");
-            yield break;
-        }
-
-        if (string.IsNullOrWhiteSpace(destinationAddress))
-        {
-            SetOutput("Destination address is empty.");
-            yield break;
-        }
-
-        const float locationWaitTimeoutSeconds = 15f;
-        float waitedSeconds = 0f;
-        while (!TryReadUserLocationFromGetLocation(out _, out _) && waitedSeconds < locationWaitTimeoutSeconds)
-        {
-            yield return new WaitForSeconds(0.5f);
-            waitedSeconds += 0.5f;
-        }
-
-        if (!TryReadUserLocationFromGetLocation(out double originLat, out double originLon))
-        {
-            SetOutput("No valid location from GetLocation yet. Wait for GPS and try again.");
-            yield break;
-        }
-
-        CurrentUserLatLon = new Vector2((float)originLat, (float)originLon);
-
-        string origin = $"{originLat.ToString(CultureInfo.InvariantCulture)},{originLon.ToString(CultureInfo.InvariantCulture)}";
-        string encodedDestination = UnityWebRequest.EscapeURL(destinationAddress);
-        string url = $"{DIRECTIONS_API_URL}?origin={origin}&destination={encodedDestination}&mode={travelMode}&units=imperial&key={apiConfig.GoogleMapsApiKey}";
-
-        using (UnityWebRequest request = UnityWebRequest.Get(url))
-        {
-            yield return request.SendWebRequest();
-
-            if (request.result != UnityWebRequest.Result.Success)
+            if (apiConfig == null)
             {
-                SetOutput($"Network error: {request.error}");
+                apiConfig = Resources.Load<APIConfig>("APIConfig");
+            }
+
+            if (apiConfig == null || !apiConfig.HasGoogleMapsKey)
+            {
+                SetOutput("Missing API key. Assign APIConfig or place APIConfig.asset in Resources.");
                 yield break;
             }
 
-            JObject response;
-            try
+            if (string.IsNullOrWhiteSpace(destinationAddress))
             {
-                response = JObject.Parse(request.downloadHandler.text);
-            }
-            catch
-            {
-                SetOutput("Could not parse Google Directions response.");
+                SetOutput("Destination address is empty.");
                 yield break;
             }
 
-            string status = response["status"]?.ToString();
-            if (status != "OK")
+            if (LocationManager.Instance == null || !LocationManager.Instance.HasReceivedGPS)
             {
-                string errorMessage = response["error_message"]?.ToString();
-                SetOutput($"Directions API error: {status} {errorMessage}");
+                SetOutput($"Waiting for companion app GPS...\n{BuildCompanionAppHint()}");
+            }
+
+            // Wait for GPS data to arrive from companion app via LocationManager/LocationReceiver
+            const float locationWaitTimeoutSeconds = 15f;
+            float waitedSeconds = 0f;
+            while ((LocationManager.Instance == null || !LocationManager.Instance.HasReceivedGPS)
+                   && waitedSeconds < locationWaitTimeoutSeconds)
+            {
+                yield return new WaitForSeconds(0.5f);
+                waitedSeconds += 0.5f;
+            }
+
+            if (LocationManager.Instance == null || !LocationManager.Instance.HasReceivedGPS
+                || !LocationManager.Instance.CurrentLocation.IsValid)
+            {
+                pendingRouteRequestAfterGps = true;
+                SetOutput($"No valid location from companion app yet.\n{BuildCompanionAppHint()}");
                 yield break;
             }
 
-            JArray routes = response["routes"] as JArray;
-            JArray legs = routes?[0]?["legs"] as JArray;
-            JArray steps = legs?[0]?["steps"] as JArray;
+            GeoLocation userLocation = LocationManager.Instance.CurrentLocation;
+            double originLat = userLocation.Latitude;
+            double originLon = userLocation.Longitude;
 
-            if (steps == null || steps.Count == 0)
+            string origin = $"{originLat.ToString(CultureInfo.InvariantCulture)},{originLon.ToString(CultureInfo.InvariantCulture)}";
+            string encodedDestination = UnityWebRequest.EscapeURL(destinationAddress);
+            string url = $"{DIRECTIONS_API_URL}?origin={origin}&destination={encodedDestination}&mode={travelMode}&units=imperial&key={apiConfig.GoogleMapsApiKey}";
+
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
-                SetOutput("No waypoints returned for this route.");
-                yield break;
+                yield return request.SendWebRequest();
+
+                if (request.result != UnityWebRequest.Result.Success)
+                {
+                    SetOutput($"Network error: {request.error}");
+                    yield break;
+                }
+
+                JObject response;
+                try
+                {
+                    response = JObject.Parse(request.downloadHandler.text);
+                }
+                catch
+                {
+                    SetOutput("Could not parse Google Directions response.");
+                    yield break;
+                }
+
+                string status = response["status"]?.ToString();
+                if (status != "OK")
+                {
+                    string errorMessage = response["error_message"]?.ToString();
+                    SetOutput($"Directions API error: {status} {errorMessage}");
+                    yield break;
+                }
+
+                JArray routes = response["routes"] as JArray;
+                JArray legs = routes?[0]?["legs"] as JArray;
+                JArray steps = legs?[0]?["steps"] as JArray;
+
+                if (steps == null || steps.Count == 0)
+                {
+                    SetOutput("No waypoints returned for this route.");
+                    yield break;
+                }
+
+                waypoints.Clear();
+                waypointInstructions.Clear();
+                waypointDistanceTexts.Clear();
+
+                for (int i = 0; i < steps.Count; i++)
+                {
+                    JObject step = (JObject)steps[i];
+                    string instruction = StripHtml(step["html_instructions"]?.ToString() ?? "Continue");
+                    string maneuver = step["maneuver"]?.ToString() ?? string.Empty;
+                    string distanceText = step["distance"]?["text"]?.ToString() ?? "";
+                    double lat = step["end_location"]?["lat"]?.Value<double>() ?? 0;
+                    double lon = step["end_location"]?["lng"]?.Value<double>() ?? 0;
+
+                    waypoints.Add(new GeoLocation { Latitude = lat, Longitude = lon });
+                    waypointInstructions.Add(BuildFriendlyInstruction(instruction, maneuver, distanceText));
+                    waypointDistanceTexts.Add(distanceText);
+                }
+
+                nextWaypointIndex = 0;
+                CurrentRoute = new RouteData { Waypoints = new List<GeoLocation>(waypoints) };
+                UpdateNextDirectionOutput(originLat, originLon);
             }
+        }
+        finally
+        {
+            routeRequestInProgress = false;
+        }
+    }
 
-            waypoints.Clear();
-            waypointInstructions.Clear();
-            waypointDistanceTexts.Clear();
+    private void SubscribeToLocationUpdates()
+    {
+        if (subscribedToLocationUpdates || LocationManager.Instance == null)
+        {
+            return;
+        }
 
-            for (int i = 0; i < steps.Count; i++)
-            {
-                JObject step = (JObject)steps[i];
-                string instruction = StripHtml(step["html_instructions"]?.ToString() ?? "Continue");
-                string maneuver = step["maneuver"]?.ToString() ?? string.Empty;
-                string distanceText = step["distance"]?["text"]?.ToString() ?? "";
-                double lat = step["end_location"]?["lat"]?.Value<double>() ?? 0;
-                double lon = step["end_location"]?["lng"]?.Value<double>() ?? 0;
+        LocationManager.Instance.OnLocationUpdated += HandleLocationUpdated;
+        subscribedToLocationUpdates = true;
+    }
 
-                waypoints.Add(new Vector2((float)lat, (float)lon));
-                waypointInstructions.Add(BuildFriendlyInstruction(instruction, maneuver, distanceText));
-                waypointDistanceTexts.Add(distanceText);
-            }
+    private void UnsubscribeFromLocationUpdates()
+    {
+        if (!subscribedToLocationUpdates || LocationManager.Instance == null)
+        {
+            return;
+        }
 
-            nextWaypointIndex = 0;
-            UpdateNextDirectionOutput(originLat, originLon);
+        LocationManager.Instance.OnLocationUpdated -= HandleLocationUpdated;
+        subscribedToLocationUpdates = false;
+    }
+
+    private void HandleLocationUpdated(GeoLocation location)
+    {
+        if (!location.IsValid)
+        {
+            return;
+        }
+
+        if (pendingRouteRequestAfterGps && !routeRequestInProgress)
+        {
+            RequestWaypointList();
+            return;
+        }
+
+        if (HasRoute)
+        {
+            UpdateNextDirectionOutput(location.Latitude, location.Longitude);
         }
     }
 
@@ -157,14 +260,17 @@ public class NavigationRoute : MonoBehaviour
 
         while (true)
         {
-            if (waypoints.Count > 0 && nextWaypointIndex < waypoints.Count)
+            if (waypoints.Count > 0 && nextWaypointIndex < waypoints.Count
+                && LocationManager.Instance != null)
             {
-                if (TryReadUserLocationFromGetLocation(out double userLat, out double userLon))
+                GeoLocation userLocation = LocationManager.Instance.CurrentLocation;
+                if (userLocation.IsValid)
                 {
-                    CurrentUserLatLon = new Vector2((float)userLat, (float)userLon);
+                    double userLat = userLocation.Latitude;
+                    double userLon = userLocation.Longitude;
 
-                    Vector2 next = waypoints[nextWaypointIndex];
-                    float distanceMeters = DistanceMeters(userLat, userLon, next.x, next.y);
+                    GeoLocation next = waypoints[nextWaypointIndex];
+                    float distanceMeters = LocationManager.GetDistance(userLat, userLon, next.Latitude, next.Longitude);
 
                     if (distanceMeters <= waypointReachedMeters)
                     {
@@ -177,57 +283,6 @@ public class NavigationRoute : MonoBehaviour
 
             yield return interval;
         }
-    }
-
-    private bool TryReadUserLocationFromGetLocation(out double latitude, out double longitude)
-    {
-        latitude = 0;
-        longitude = 0;
-
-        if (getLocation == null || getLocation.output == null)
-        {
-            return false;
-        }
-
-        string txt = getLocation.output.text;
-        Match labeledFormatMatch = Regex.Match(
-            txt,
-            @"Latitude:\s*(-?\d+(?:\.\d+)?)\s*[\r\n]+Longitude:\s*(-?\d+(?:\.\d+)?)",
-            RegexOptions.IgnoreCase);
-
-        if (labeledFormatMatch.Success)
-        {
-            return double.TryParse(labeledFormatMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out latitude)
-                && double.TryParse(labeledFormatMatch.Groups[2].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out longitude);
-        }
-
-        Match plainFormatMatch = Regex.Match(
-            txt,
-            @"(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)",
-            RegexOptions.IgnoreCase);
-
-        if (!plainFormatMatch.Success)
-        {
-            return false;
-        }
-
-        return double.TryParse(plainFormatMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out latitude)
-            && double.TryParse(plainFormatMatch.Groups[2].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out longitude);
-    }
-
-    private static float DistanceMeters(double lat1, double lon1, double lat2, double lon2)
-    {
-        const double earthRadius = 6371000.0;
-        double dLat = Mathf.Deg2Rad * (float)(lat2 - lat1);
-        double dLon = Mathf.Deg2Rad * (float)(lon2 - lon1);
-        double lat1Rad = Mathf.Deg2Rad * (float)lat1;
-        double lat2Rad = Mathf.Deg2Rad * (float)lat2;
-
-        double a = Mathf.Sin((float)(dLat / 2)) * Mathf.Sin((float)(dLat / 2))
-                 + Mathf.Cos((float)lat1Rad) * Mathf.Cos((float)lat2Rad)
-                 * Mathf.Sin((float)(dLon / 2)) * Mathf.Sin((float)(dLon / 2));
-
-        return (float)(2 * earthRadius * Mathf.Atan2(Mathf.Sqrt((float)a), Mathf.Sqrt((float)(1 - a))));
     }
 
     private static string StripHtml(string value)
@@ -308,6 +363,50 @@ public class NavigationRoute : MonoBehaviour
         return string.Empty;
     }
 
+    private static string BuildCompanionAppHint()
+    {
+        LocationReceiver receiver = FindFirstObjectByType<LocationReceiver>();
+        if (receiver == null)
+        {
+            return "Add LocationReceiver to the scene, then connect your companion app.";
+        }
+
+        string host = GetLocalIPv4Address();
+        string serverStatus = receiver.isServerRunning ? "UP" : "DOWN";
+        return $"Companion app WebSocket URL: ws://{host}:{receiver.port}\nServer status: {serverStatus}";
+    }
+
+    private static string GetLocalIPv4Address()
+    {
+        try
+        {
+            foreach (NetworkInterface networkInterface in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (networkInterface.OperationalStatus != OperationalStatus.Up ||
+                    networkInterface.NetworkInterfaceType == NetworkInterfaceType.Loopback)
+                {
+                    continue;
+                }
+
+                IPInterfaceProperties properties = networkInterface.GetIPProperties();
+                foreach (UnicastIPAddressInformation unicast in properties.UnicastAddresses)
+                {
+                    if (unicast.Address.AddressFamily == AddressFamily.InterNetwork &&
+                        !IPAddress.IsLoopback(unicast.Address))
+                    {
+                        return unicast.Address.ToString();
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Fall through to fallback text below.
+        }
+
+        return "YOUR_DEVICE_IP";
+    }
+
     private void UpdateNextDirectionOutput(double userLat, double userLon)
     {
         if (waypoints.Count == 0)
@@ -321,19 +420,21 @@ public class NavigationRoute : MonoBehaviour
             return;
         }
 
-        Vector2 next = waypoints[nextWaypointIndex];
-        float distanceMeters = DistanceMeters(userLat, userLon, next.x, next.y);
+        GeoLocation next = waypoints[nextWaypointIndex];
+        float distanceMeters = LocationManager.GetDistance(userLat, userLon, next.Latitude, next.Longitude);
         string instruction = waypointInstructions[nextWaypointIndex];
         string legDistance = waypointDistanceTexts[nextWaypointIndex];
+        string currentLocation = $"Current location: {userLat.ToString("F6", CultureInfo.InvariantCulture)}, {userLon.ToString("F6", CultureInfo.InvariantCulture)}";
 
-        SetOutput($"Next: {instruction}\nRemaining to next waypoint: {distanceMeters:F0} m\nStep distance: {legDistance}");
+        SetOutput($"Next: {instruction}\nRemaining to next waypoint: {distanceMeters:F0} m\nStep distance: {legDistance}\n{currentLocation}");
     }
 
     private void SetOutput(string message)
     {
-        if (outputText != null)
+        if (outputText && outputText2 != null)
         {
             outputText.text = message;
+            outputText2.text = message;
         }
 
         Debug.Log($"[NavigationRoute] {message}");
