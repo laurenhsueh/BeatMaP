@@ -55,19 +55,36 @@ public abstract class BaseBehavior : MonoBehaviour
     {
         spawnPos = Vector3.zero;
 
+        if (_planeManager == null)
+        {
+            Debug.LogError("TryGetSpawnPoint: _planeManager is null");
+            return false;
+        }
+
         // Collect all valid horizontal planes
         List<ARPlane> horizontalPlanes = new();
         foreach (ARPlane plane in _planeManager.trackables)
         {
+            if (plane == null) continue;
+            if (plane.trackingState != UnityEngine.XR.ARSubsystems.TrackingState.Tracking) continue;
             if (plane.alignment == PlaneAlignment.HorizontalUp)
                 horizontalPlanes.Add(plane);
         }
 
         if (horizontalPlanes.Count == 0)
+        {
+            Debug.LogWarning("TryGetSpawnPoint: No tracked horizontal planes found");
             return false;
+        }
 
         // Pick a random plane
         ARPlane chosen = horizontalPlanes[Random.Range(0, horizontalPlanes.Count)];
+
+        if (chosen == null || chosen.transform == null)
+        {
+            Debug.LogError("TryGetSpawnPoint: Chosen plane or its transform is null");
+            return false;
+        }
 
         // Pick a random point within the plane's bounds
         Vector2 halfExtents = chosen.extents * 0.5f;
@@ -77,6 +94,7 @@ public abstract class BaseBehavior : MonoBehaviour
         // Plane center is in world space; offset in the plane's local X/Z
         spawnPos = chosen.transform.TransformPoint(new Vector3(randomX, 0f, randomZ));
 
+        Debug.Log($"Spawning on plane {chosen.trackableId} at {spawnPos}");
         return true;
     }
 }
