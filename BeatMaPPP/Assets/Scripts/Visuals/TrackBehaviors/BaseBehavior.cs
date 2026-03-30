@@ -1,25 +1,17 @@
-// Behavior that all prefabs inherit from
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
-using System.Collections.Generic;
 
 public abstract class BaseBehavior : MonoBehaviour
 {
     [SerializeField] private GameObject prefab;
 
+    [SerializeField] private float minDistance = 1.5f;
+    [SerializeField] private float maxDistance = 3.5f;
+    [SerializeField] private float horizontalSpread = 1.5f;
+    [SerializeField] private float verticalSpread = 1.5f;
+
     [SerializeField] private float fadeInDuration = 0.5f;
     [SerializeField] private float fadeOutDuration = 0.5f;
     [SerializeField] private float lifetime = 10f;
-    private ARPlaneManager _planeManager;
-
-    protected virtual void Awake()
-    {
-        _planeManager = FindAnyObjectByType<ARPlaneManager>();
-
-        if (_planeManager == null)
-            Debug.LogWarning($"{GetType().Name}: No ARPlaneManager found in scene.");
-    }
 
     public virtual void Spawn()
     {
@@ -29,79 +21,52 @@ public abstract class BaseBehavior : MonoBehaviour
             return;
         }
 
-        if (!TryGetSpawnPoint(out Vector3 spawnPos))
+        Vector3 spawnPos;
+        bool usedPlane = false;
+
+        if (PlaneSpawnManager.Instance != null &&
+            PlaneSpawnManager.Instance.PlanesReady &&
+            PlaneSpawnManager.Instance.TryGetSpawnPoint(out Vector3 planePos))
         {
-            Debug.LogWarning($"{GetType().Name}: No horizontal surface found to spawn on.");
-            return;
+            spawnPos = planePos;
+            usedPlane = true;
         }
+        else
+        {
+            spawnPos = GetCameraSpawnPoint();
+        }
+
+        Debug.Log($"{GetType().Name} spawned at {spawnPos} (usedPlane: {usedPlane})");
 
         GameObject spawned = Instantiate(prefab, spawnPos, Quaternion.identity);
 
         FadeController fader = spawned.AddComponent<FadeController>();
         fader.FadeIn(fadeInDuration);
 
-        // Destroy after full lifetime, but kick off fade-out beforehand
         float destroyDelay = Mathf.Max(lifetime, fadeOutDuration);
-        float fadeOutStart = destroyDelay - fadeOutDuration;
-
-        fader.ScheduleFadeOut(fadeOutStart, fadeOutDuration);
+        fader.ScheduleFadeOut(destroyDelay - fadeOutDuration, fadeOutDuration);
         Destroy(spawned, destroyDelay);
-
-        Debug.Log($"{GetType().Name} prefab spawned at {spawnPos}");
     }
 
-    // Picks a random point on a random detected horizontal plane
-    private bool TryGetSpawnPoint(out Vector3 spawnPos)
+    private Vector3 GetCameraSpawnPoint()
     {
-        spawnPos = Vector3.zero;
-
-        if (_planeManager == null)
-        {
-            Debug.LogError("TryGetSpawnPoint: _planeManager is null");
-            return false;
-        }
-
-        // Collect all valid horizontal planes
-        List<ARPlane> horizontalPlanes = new();
-        foreach (ARPlane plane in _planeManager.trackables)
-        {
-            if (plane == null) continue;
-            if (plane.trackingState != UnityEngine.XR.ARSubsystems.TrackingState.Tracking) continue;
-            if (plane.alignment == PlaneAlignment.HorizontalUp)
-                horizontalPlanes.Add(plane);
-        }
-
-        if (horizontalPlanes.Count == 0)
-        {
-            Debug.LogWarning("TryGetSpawnPoint: No tracked horizontal planes found");
-            return false;
-        }
-
-        // Pick a random plane
-        ARPlane chosen = horizontalPlanes[Random.Range(0, horizontalPlanes.Count)];
-
-        if (chosen == null || chosen.transform == null)
-        {
-            Debug.LogError("TryGetSpawnPoint: Chosen plane or its transform is null");
-            return false;
-        }
-
-        // Pick a random point within the plane's bounds
-        Vector2 halfExtents = chosen.extents * 0.5f;
-        float randomX = Random.Range(-halfExtents.x, halfExtents.x);
-        float randomZ = Random.Range(-halfExtents.y, halfExtents.y);
-
-        // Plane center is in world space; offset in the plane's local X/Z
-        spawnPos = chosen.transform.TransformPoint(new Vector3(randomX, 0f, randomZ));
-
-        Debug.Log($"Spawning on plane {chosen.trackableId} at {spawnPos}");
-        return true;
+        Transform cam = Camera.main.transform;
+        return cam.position
+            + cam.forward * Random.Range(minDistance, maxDistance)
+            + cam.right   * Random.Range(-horizontalSpread, horizontalSpread)
+            + cam.up      * Random.Range(-verticalSpread, verticalSpread);
     }
 }
 
 
 
-// // WORKING WITH FADE
+///////////////////////////////////
+
+
+
+// OLD SCRIPT BELOW IN CASE SOMETHING MESSES UP
+
+// // WORKING WITH FADE, SPAWNS RANDOM DISTANCE IN FRONT OF CAMERA
 // using UnityEngine;
 
 // public abstract class BaseBehavior : MonoBehaviour
