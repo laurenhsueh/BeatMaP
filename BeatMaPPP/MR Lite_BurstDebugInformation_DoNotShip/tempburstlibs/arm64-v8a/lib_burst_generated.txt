@@ -10,7 +10,6 @@ Library: /Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reali
 --target-framework=NetFramework
 --generate-link-xml=Temp/burst.link.xml
 --temp-folder=/Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reality Development/BeatMaP/BeatMaPPP/Temp/Burst
---debug=Full
 --key-folder=/Applications/Unity/Hub/Editor/6000.3.9f1/PlaybackEngines/AndroidPlayer
 --decode-folder=/Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reality Development/BeatMaP/BeatMaPPP/Library/Burst
 --output=/Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reality Development/BeatMaP/BeatMaPPP/Temp/BurstOutput/tempburstlibs/arm64-v8a/lib_burst_generated
@@ -127,7 +126,6 @@ Library: /Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reali
 --target-framework=NetFramework
 --generate-link-xml=Temp/burst.link.xml
 --temp-folder=/Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reality Development/BeatMaP/BeatMaPPP/Temp/Burst
---debug=Full
 --key-folder=/Applications/Unity/Hub/Editor/6000.3.9f1/PlaybackEngines/AndroidPlayer
 --decode-folder=/Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reality Development/BeatMaP/BeatMaPPP/Library/Burst
 --output=/Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reality Development/BeatMaP/BeatMaPPP/Temp/BurstOutput/tempburstlibs/arm64-v8a/lib_burst_generated
@@ -220,7 +218,6 @@ Library: /Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reali
 --float-mode=Fast
 --generate-link-xml=Temp/burst.link.xml
 --temp-folder=/Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reality Development/BeatMaP/BeatMaPPP/Temp/Burst
---debug=Full
 --key-folder=/Applications/Unity/Hub/Editor/6000.3.9f1/PlaybackEngines/AndroidPlayer
 --decode-folder=/Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reality Development/BeatMaP/BeatMaPPP/Library/Burst
 --output=/Users/minasun/Documents/0. SCHOOL/2. SOPHOMORE/IDSN 539 Extended Reality Development/BeatMaP/BeatMaPPP/Temp/BurstOutput/tempburstlibs/arm64-v8a/lib_burst_generated
