@@ -122,16 +122,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3001656413901574098}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d0c35bd6ac9c4914b422b1aade984d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PianoTrack
-  prefab: {fileID: 3001656413901574098}
+  prefab: {fileID: 964536390901803047, guid: c6ef5a890c9754eab91ac86bc85ddb33, type: 3}
   minDistance: 1.5
   maxDistance: 3.5
   horizontalSpread: 1.5
   verticalSpread: 1.5
+  fadeInDuration: 0.5
+  fadeOutDuration: 0.5
+  lifetime: 10
 --- !u!54 &-9041960046743934668
 Rigidbody:
   m_ObjectHideFlags: 0

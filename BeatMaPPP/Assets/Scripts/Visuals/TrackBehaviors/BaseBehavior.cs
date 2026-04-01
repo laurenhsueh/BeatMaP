@@ -11,14 +11,14 @@ public abstract class BaseBehavior : MonoBehaviour
 
     [SerializeField] private float fadeInDuration = 0.5f;
     [SerializeField] private float fadeOutDuration = 0.5f;
-    [SerializeField] private float lifetime = 10f;
+    [SerializeField] private float lifetime = 5f;
 
-    public virtual void Spawn()
+    public virtual GameObject Spawn()
     {
         if (prefab == null)
         {
             Debug.LogWarning($"{GetType().Name}: No prefab assigned.");
-            return;
+            return null;
         }
 
         Vector3 spawnPos;
@@ -38,7 +38,8 @@ public abstract class BaseBehavior : MonoBehaviour
 
         Debug.Log($"{GetType().Name} spawned at {spawnPos} (usedPlane: {usedPlane})");
 
-        GameObject spawned = Instantiate(prefab, spawnPos, Quaternion.identity);
+        Quaternion randomYRot = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+        GameObject spawned = Instantiate(prefab, spawnPos, randomYRot);
 
         FadeController fader = spawned.AddComponent<FadeController>();
         fader.FadeIn(fadeInDuration);
@@ -46,6 +47,8 @@ public abstract class BaseBehavior : MonoBehaviour
         float destroyDelay = Mathf.Max(lifetime, fadeOutDuration);
         fader.ScheduleFadeOut(destroyDelay - fadeOutDuration, fadeOutDuration);
         Destroy(spawned, destroyDelay);
+
+        return spawned;
     }
 
     private Vector3 GetCameraSpawnPoint()

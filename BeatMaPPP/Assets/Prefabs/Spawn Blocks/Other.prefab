@@ -122,16 +122,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3001656413901574098}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa3879ecc28e14d79b1a3a030c3c5284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OtherTrack
-  prefab: {fileID: 3001656413901574098}
+  prefab: {fileID: 4962599255567452960, guid: 493eb4d80ad764511868b534eb789e7e, type: 3}
   minDistance: 1.5
   maxDistance: 3.5
   horizontalSpread: 1.5
   verticalSpread: 1.5
+  fadeInDuration: 0.5
+  fadeOutDuration: 0.5
+  lifetime: 10
 --- !u!54 &612056481641080429
 Rigidbody:
   m_ObjectHideFlags: 0
