@@ -6,26 +6,38 @@ public class PrefabMove : MonoBehaviour
     public bool isMoving = true;
 
     private Vector3 moveDirection;
+    private bool directionSet = false;
 
-    /// <summary>
-    /// Call this after Instantiate to lock a world-space travel direction.
-    /// If not called, defaults to the object's own transform.forward.
-    /// </summary>
     public void SetDirection(Vector3 direction)
     {
         moveDirection = direction.normalized;
+        directionSet = true;
     }
+
+    // private void Start()
+    // {
+    //     if (!directionSet)
+    //         moveDirection = transform.forward;
+    // }
+
+    // private void Update()
+    // {
+    //     if (!isMoving) return;
+    //     transform.position += moveDirection * speed * Time.deltaTime;
+    // }
 
     private void Start()
     {
-        // Fall back to transform.forward if no direction was injected
-        if (moveDirection == Vector3.zero)
+        if (!directionSet)
             moveDirection = transform.forward;
+        
+        Debug.Log($"PrefabMove Start — direction: {moveDirection}, speed: {speed}, isMoving: {isMoving}");
     }
 
     private void Update()
     {
         if (!isMoving) return;
+        Debug.Log($"PrefabMove moving — direction: {moveDirection}, speed: {speed}");
         transform.position += moveDirection * speed * Time.deltaTime;
     }
 
@@ -33,7 +45,6 @@ public class PrefabMove : MonoBehaviour
     {
         float newY = Random.Range(0f, 360f);
         transform.rotation = Quaternion.Euler(0f, newY, 0f);
-        // Re-align movement direction to new facing after bounce
         moveDirection = transform.forward;
     }
 }
