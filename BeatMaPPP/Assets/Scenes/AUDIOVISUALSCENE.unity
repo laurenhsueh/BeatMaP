@@ -243,7 +243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9c63557166a46e1a00e0e4e2e73515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GetLocation
-  output: {fileID: 883179496}
 --- !u!4 &72599757
 Transform:
   m_ObjectHideFlags: 0
@@ -274,10 +273,21 @@ MonoBehaviour:
   apiConfig: {fileID: 11400000, guid: 14615428c0beb4164921220bbe6bb27f, type: 2}
   outputText: {fileID: 1752881901}
   outputText2: {fileID: 0}
+  routeLineRenderer: {fileID: 0}
+  routeLineAnchor: {fileID: 0}
+  autoCreateRouteLineRenderer: 1
+  routeLineWidth: 0.2
+  routeLineHeightOffset: 0.05
   destinationAddress: 3780 Watt Way, Los Angeles, CA 90089
   travelMode: walking
   waypointReachedMeters: 6
   autoRequestOnStart: 1
+  compassHeadingOffsetDegrees: 0
+  mapRecalibrationIntervalSeconds: 5
+  enableHeadingCorrection: 1
+  headingCorrectionMinDeltaDegrees: 2
+  headingCorrectionStrength: 0.35
+  maxHeadingCorrectionPerUpdateDegrees: 8
 --- !u!114 &72599759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,10 +300,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f01b722d962e4f25992f02040e5e503, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GoogleMapsService
-  apiConfig: {fileID: 11400000, guid: 14615428c0beb4164921220bbe6bb27f, type: 2}
-  travelMode: walking
-  enableAlternatives: 0
-  apiKey: 
 --- !u!114 &87866908
 MonoBehaviour:
   m_ObjectHideFlags: 0
