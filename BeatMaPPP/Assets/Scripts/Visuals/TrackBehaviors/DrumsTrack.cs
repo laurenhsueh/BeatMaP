@@ -2,9 +2,20 @@ using UnityEngine;
 
 public class DrumsTrack : BaseBehavior
 {
-    public override void Spawn()
+    [SerializeField] private float moveSpeed = 0.00000001f;
+
+    public override GameObject Spawn()
     {
-        base.Spawn();
-        Debug.Log("Drums visual spawned.");
+        GameObject spawned = base.Spawn();
+
+        if (spawned != null)
+        {
+            PrefabMove mover = spawned.AddComponent<PrefabMove>();
+            mover.speed = moveSpeed;
+            // spawned.AddComponent<IdleSwitch>();
+            Debug.Log("Drums visual spawned.");
+        }
+
+        return spawned;
     }
 }

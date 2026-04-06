@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5496131162549712553}
   - component: {fileID: 7956843501099387866}
   - component: {fileID: 3291542766032215062}
-  - component: {fileID: -8707746676402392054}
   - component: {fileID: 2973879404154745975}
   - component: {fileID: 4318529530284735884}
   m_Layer: 0
@@ -115,23 +114,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-8707746676402392054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3001656413901574098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77b6db71eb4d94ccd84c82a71a28fdc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GuitarTrack
-  prefab: {fileID: 3001656413901574098}
-  minDistance: 1.5
-  maxDistance: 3.5
-  horizontalSpread: 1.5
-  verticalSpread: 1.5
 --- !u!54 &2973879404154745975
 Rigidbody:
   m_ObjectHideFlags: 0

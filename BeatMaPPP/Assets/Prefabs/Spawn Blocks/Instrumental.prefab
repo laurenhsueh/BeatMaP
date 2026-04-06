@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5496131162549712553}
   - component: {fileID: 7956843501099387866}
   - component: {fileID: 3291542766032215062}
-  - component: {fileID: 2575584027491956147}
   - component: {fileID: -649846752616485978}
   - component: {fileID: 7409623832994763413}
   m_Layer: 0
@@ -115,23 +114,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2575584027491956147
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3001656413901574098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b7131529c4b2416f9377ef0234db5a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InstrumentalTrack
-  prefab: {fileID: 3001656413901574098}
-  minDistance: 1.5
-  maxDistance: 3.5
-  horizontalSpread: 1.5
-  verticalSpread: 1.5
 --- !u!54 &-649846752616485978
 Rigidbody:
   m_ObjectHideFlags: 0
