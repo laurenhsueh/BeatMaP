@@ -4,14 +4,17 @@ public class DrumsTrack : BaseBehavior
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float behindDistance = 2f;
+    [SerializeField] private float horizontalSpread = 1.5f;
+    [SerializeField] private float verticalSpread = 1.5f;
     [SerializeField] private float spawnHeightOffset = 0f;
 
     protected override Vector3 GetSpawnPosition()
     {
         Transform cam = Camera.main.transform;
         return cam.position
-             - cam.forward * behindDistance
-             + Vector3.up  * spawnHeightOffset;
+            - cam.forward * behindDistance
+            + cam.right   * Random.Range(-horizontalSpread, horizontalSpread)
+            + cam.up      * Random.Range(-verticalSpread, verticalSpread);
     }
 
     protected override Quaternion GetSpawnRotation()
