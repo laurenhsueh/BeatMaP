@@ -3,6 +3,8 @@ using UnityEngine;
 public class DrumsTrack : BaseBehavior
 {
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float laneOffset = -0.9f;
+    [SerializeField] private float laneHeight = 0.05f;
     [SerializeField] private float behindDistance = 2f;
     [SerializeField] private float horizontalSpread = 1.5f;
     [SerializeField] private float verticalSpread = 1.5f;
@@ -30,6 +32,7 @@ public class DrumsTrack : BaseBehavior
             PrefabMove mover = spawned.AddComponent<PrefabMove>();
             mover.speed = moveSpeed;
             mover.SetDirection(Camera.main.transform.forward);
+            mover.SetOffsets(laneOffset, laneHeight);
 
             Debug.Log("Drums visual spawned.");
         }

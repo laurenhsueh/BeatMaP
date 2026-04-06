@@ -30,6 +30,7 @@ public class NavigationRoute : MonoBehaviour
     [SerializeField] private string destinationAddress = "";
     [SerializeField] private string travelMode = "walking";
     [SerializeField] private float waypointReachedMeters = 6f;
+    [SerializeField] private float destinationReachedMeters = 10f;
     [SerializeField] private bool autoRequestOnStart = true;
     [SerializeField] private float compassHeadingOffsetDegrees = 0f;
 
@@ -386,7 +387,10 @@ public class NavigationRoute : MonoBehaviour
         {
             GeoLocation next = waypoints[nextWaypointIndex];
             float distanceMeters = LocationManager.GetDistance(userLat, userLon, next.Latitude, next.Longitude);
-            if (distanceMeters > waypointReachedMeters)
+            bool isFinalWaypoint = nextWaypointIndex == waypoints.Count - 1;
+            float reachedThreshold = isFinalWaypoint ? destinationReachedMeters : waypointReachedMeters;
+
+            if (distanceMeters > reachedThreshold)
             {
                 break;
             }
@@ -503,7 +507,7 @@ public class NavigationRoute : MonoBehaviour
 
         if (nextWaypointIndex >= waypoints.Count)
         {
-            SetOutput("Arrived at destination.");
+            SetOutput("You have reached your destination!");
             return;
         }
 
@@ -545,9 +549,9 @@ public class NavigationRoute : MonoBehaviour
         int pointCount = userAtFirst ? remainingWaypoints : remainingWaypoints + 1;
         routeLineRenderer.positionCount = pointCount;
 
-        // Camera position is always the exact Unity-space representation of the user's real position
+        // Keep route line near feet/floor instead of anchoring at camera (head) height.
         Vector3 camPos = Camera.main != null ? Camera.main.transform.position : mapOriginWorldPos;
-        float lineY = camPos.y + routeLineHeightOffset;
+        float lineY = GetRouteLineBaseY() + routeLineHeightOffset;
 
         int offset = 0;
         if (!userAtFirst)
@@ -563,6 +567,29 @@ public class NavigationRoute : MonoBehaviour
             worldPos.y = lineY;
             routeLineRenderer.SetPosition(offset + i, worldPos);
         }
+    }
+
+    private float GetRouteLineBaseY()
+    {
+        if (routeLineAnchor != null)
+        {
+            return routeLineAnchor.position.y;
+        }
+
+        if (Camera.main == null)
+        {
+            return mapOriginWorldPos.y;
+        }
+
+        Transform cam = Camera.main.transform;
+
+        // In XR rigs, camera local Y is usually user eye height above floor-level rig origin.
+        if (cam.parent != null)
+        {
+            return cam.position.y - cam.localPosition.y;
+        }
+
+        return cam.position.y;
     }
 
     // ─── GeoMap ───────────────────────────────────────────────────────────────

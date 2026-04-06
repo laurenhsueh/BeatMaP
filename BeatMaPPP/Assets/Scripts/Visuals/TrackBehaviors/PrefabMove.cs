@@ -9,6 +9,7 @@ public class PrefabMove : MonoBehaviour
     [SerializeField] private float lookAheadDistance = 0.35f;
     [SerializeField] private float despawnAheadDistance = 16f;
     [SerializeField] private float yOffset = 0f;
+    [SerializeField] private float lateralOffset = 0f;
     [SerializeField] private float fadeOutDuration = 0.35f;
 
     private Vector3 moveDirection;
@@ -19,6 +20,12 @@ public class PrefabMove : MonoBehaviour
     public void SetDirection(Vector3 direction)
     {
         moveDirection = direction.normalized;
+    }
+
+    public void SetOffsets(float laneOffset, float verticalOffset)
+    {
+        lateralOffset = laneOffset;
+        yOffset = verticalOffset;
     }
 
     private void Update()
@@ -43,6 +50,16 @@ public class PrefabMove : MonoBehaviour
 
         Vector3 pathPos  = RoutePathMath.SampleAtDistance(routePoints, distanceOnPath);
         Vector3 aheadPos = RoutePathMath.SampleAtDistance(routePoints, distanceOnPath + Mathf.Max(lookAheadDistance, 0.05f));
+
+        Vector3 laneForward = aheadPos - pathPos;
+        laneForward.y = 0f;
+        if (laneForward.sqrMagnitude > 0.0001f)
+        {
+            Vector3 laneRight = Vector3.Cross(Vector3.up, laneForward.normalized);
+            pathPos += laneRight * lateralOffset;
+            aheadPos += laneRight * lateralOffset;
+        }
+
         pathPos.y  += yOffset;
         aheadPos.y += yOffset;
 
