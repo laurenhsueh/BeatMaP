@@ -1,10 +1,11 @@
 using UnityEngine;
+using TMPro;
 
 public class ArrowController : MonoBehaviour
 {
     public Transform userForwardReference;
-    public Transform fallbackTarget;
-
+    [SerializeField] private float modelYawOffsetDegrees = 90f;
+    [SerializeField] private TMP_Text outputText;
     void LateUpdate()
     {
         NavigationRoute navigationRoute = NavigationRoute.Instance;
@@ -42,18 +43,11 @@ public class ArrowController : MonoBehaviour
         }
         else
         {
-            if (fallbackTarget == null)
-                return;
-
-            Vector3 flatDirection = fallbackTarget.position - transform.position;
-            flatDirection.y = 0f;
-            if (flatDirection.sqrMagnitude <= 0.0001f)
-                return;
-
-            desiredYaw = Quaternion.LookRotation(flatDirection.normalized, Vector3.up).eulerAngles.y;
+            outputText.text = "No valid waypoint or location data.";
+            return;
         }
 
-        Quaternion desiredWorldRotation = Quaternion.Euler(0f, desiredYaw, 0f);
+        Quaternion desiredWorldRotation = Quaternion.Euler(0f, desiredYaw + modelYawOffsetDegrees, 0f);
 
         // Keep arrow flat and prevent parent hand rotation from twisting it.
         if (transform.parent != null)

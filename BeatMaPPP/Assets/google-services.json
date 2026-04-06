@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "420673546935",
+    "firebase_url": "https://unity-app-db-default-rtdb.firebaseio.com",
+    "project_id": "unity-app-db",
+    "storage_bucket": "unity-app-db.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420673546935:android:ed8148291273575f257b32",
+        "android_client_info": {
+          "package_name": "com.Artfail.DevDemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420673546935-2e7ugt9l4fbgkjvv54olr5frj092hfk4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz5gyTGuZmTRLqrvpd7qXhmr6VjzGB7lo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420673546935-2e7ugt9l4fbgkjvv54olr5frj092hfk4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "420673546935-742in8kntup4bkbak1579fc6s1vnian6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Artfail.DevDemo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
