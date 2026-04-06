@@ -98,11 +98,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GuitarTrack
   prefab: {fileID: 353496077239214532}
-  minDistance: 1.5
-  maxDistance: 3.5
-  horizontalSpread: 1.5
-  verticalSpread: 1.5
+  spawnDistance: 2
   fadeInDuration: 0.5
   fadeOutDuration: 0.5
   lifetime: 5
-  moveSpeed: 0.00000001
+  moveSpeed: 5
+  behindDistance: 2
+  spawnHeightOffset: 0
