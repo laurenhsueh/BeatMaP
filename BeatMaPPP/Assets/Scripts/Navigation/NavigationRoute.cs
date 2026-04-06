@@ -56,6 +56,33 @@ public class NavigationRoute : MonoBehaviour
     public int CurrentWaypointIndex => nextWaypointIndex;
     public bool HasRoute => waypoints.Count > 0;
 
+    public bool TryGetActiveWaypoint(out GeoLocation waypoint)
+    {
+        waypoint = default;
+
+        if (waypoints.Count == 0 || nextWaypointIndex >= waypoints.Count)
+        {
+            return false;
+        }
+
+        if (LocationManager.Instance != null)
+        {
+            GeoLocation userLocation = LocationManager.Instance.CurrentLocation;
+            if (userLocation.IsValid)
+            {
+                AdvanceWaypointIndexForPosition(userLocation.Latitude, userLocation.Longitude);
+            }
+        }
+
+        if (nextWaypointIndex >= waypoints.Count)
+        {
+            return false;
+        }
+
+        waypoint = waypoints[nextWaypointIndex];
+        return true;
+    }
+
     // Route data
     private readonly List<GeoLocation> waypoints = new();
     private readonly List<string> waypointInstructions = new();
@@ -323,19 +350,28 @@ public class NavigationRoute : MonoBehaviour
                     double userLat = userLocation.Latitude;
                     double userLon = userLocation.Longitude;
 
-                    GeoLocation next = waypoints[nextWaypointIndex];
-                    float distanceMeters = LocationManager.GetDistance(userLat, userLon, next.Latitude, next.Longitude);
-
-                    if (distanceMeters <= waypointReachedMeters)
-                    {
-                        nextWaypointIndex++;
-                    }
+                    AdvanceWaypointIndexForPosition(userLat, userLon);
 
                     UpdateNextDirectionOutput(userLat, userLon);
                 }
             }
 
             yield return interval;
+        }
+    }
+
+    private void AdvanceWaypointIndexForPosition(double userLat, double userLon)
+    {
+        while (nextWaypointIndex < waypoints.Count)
+        {
+            GeoLocation next = waypoints[nextWaypointIndex];
+            float distanceMeters = LocationManager.GetDistance(userLat, userLon, next.Latitude, next.Longitude);
+            if (distanceMeters > waypointReachedMeters)
+            {
+                break;
+            }
+
+            nextWaypointIndex++;
         }
     }
 
@@ -579,9 +615,9 @@ public class NavigationRoute : MonoBehaviour
             ApplyHeadingCorrection();
         }
 
-        Vector3 camPos    = Camera.main != null ? Camera.main.transform.position : mapOriginWorldPos;
-        mapOriginLat      = latestGpsLat;
-        mapOriginLon      = latestGpsLon;
+        Vector3 camPos = Camera.main != null ? Camera.main.transform.position : mapOriginWorldPos;
+        mapOriginLat = latestGpsLat;
+        mapOriginLon = latestGpsLon;
         mapOriginWorldPos = camPos;
         lastMapRecalibrationTime = Time.time;
 

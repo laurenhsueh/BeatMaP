@@ -11,20 +11,21 @@ public class ArrowController : MonoBehaviour
         NavigationRoute navigationRoute = NavigationRoute.Instance;
         LocationManager locationManager = LocationManager.Instance;
 
+        GeoLocation currentWaypoint = default;
+
         bool hasWaypoint = navigationRoute != null
             && locationManager != null
             && navigationRoute.HasRoute
             && navigationRoute.CurrentRoute != null
             && locationManager.CurrentLocation.IsValid
             && locationManager.HasCompassHeading
-            && navigationRoute.CurrentWaypointIndex < navigationRoute.CurrentRoute.Waypoints.Count;
+            && navigationRoute.TryGetActiveWaypoint(out currentWaypoint);
 
         float desiredYaw;
 
         if (hasWaypoint)
         {
             GeoLocation currentLocation = locationManager.CurrentLocation;
-            GeoLocation currentWaypoint = navigationRoute.CurrentRoute.Waypoints[navigationRoute.CurrentWaypointIndex];
 
             float targetBearing = LocationManager.GetBearing(currentLocation, currentWaypoint);
             float relativeYaw = Mathf.DeltaAngle(locationManager.CompassHeading, targetBearing);
