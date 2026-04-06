@@ -5,66 +5,68 @@ public class PrefabMove : MonoBehaviour
     public float speed = 5f;
     public bool isMoving = true;
 
-    private Vector3 moveDirection;
-    private bool directionSet = false;
+    [Header("Path Follow")]
+    [SerializeField] private float lookAheadDistance = 0.35f;
+    [SerializeField] private float despawnAheadDistance = 16f;
+    [SerializeField] private float yOffset = 0f;
+    [SerializeField] private float fadeOutDuration = 0.35f;
 
-    public void SetDirection(Vector3 direction)
-    {
-        moveDirection = direction.normalized;
-        directionSet = true;
-    }
-
-    // private void Start()
-    // {
-    //     if (!directionSet)
-    //         moveDirection = transform.forward;
-    // }
-
-    // private void Update()
-    // {
-    //     if (!isMoving) return;
-    //     transform.position += moveDirection * speed * Time.deltaTime;
-    // }
-
-    private void Start()
-    {
-        if (!directionSet)
-            moveDirection = transform.forward;
-        
-        Debug.Log($"PrefabMove Start — direction: {moveDirection}, speed: {speed}, isMoving: {isMoving}");
-    }
+    private float distanceOnPath;
+    private bool hasDistanceOnPath;
+    private bool despawnStarted;
 
     private void Update()
     {
         if (!isMoving) return;
-        Debug.Log($"PrefabMove moving — direction: {moveDirection}, speed: {speed}");
-        transform.position += moveDirection * speed * Time.deltaTime;
+        FollowNavigationPath();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void FollowNavigationPath()
     {
-        float newY = Random.Range(0f, 360f);
-        transform.rotation = Quaternion.Euler(0f, newY, 0f);
-        moveDirection = transform.forward;
+        NavigationRoute nav = NavigationRoute.Instance;
+        if (nav == null || !nav.TryGetRouteWorldPoints(out Vector3[] routePoints) || routePoints.Length < 2)
+            return;
+
+        if (!hasDistanceOnPath)
+        {
+            distanceOnPath = RoutePathMath.ProjectDistance(routePoints, transform.position);
+            hasDistanceOnPath = true;
+        }
+
+        distanceOnPath += Mathf.Max(0f, speed) * Time.deltaTime;
+
+        Vector3 pathPos  = RoutePathMath.SampleAtDistance(routePoints, distanceOnPath);
+        Vector3 aheadPos = RoutePathMath.SampleAtDistance(routePoints, distanceOnPath + Mathf.Max(lookAheadDistance, 0.05f));
+        pathPos.y  += yOffset;
+        aheadPos.y += yOffset;
+
+        Vector3 forward = aheadPos - pathPos;
+        if (forward.sqrMagnitude > 0.0001f)
+            transform.rotation = Quaternion.LookRotation(forward.normalized, Vector3.up);
+        transform.position = pathPos;
+
+        if (Camera.main != null)
+        {
+            float cameraDistanceOnPath = RoutePathMath.ProjectDistance(routePoints, Camera.main.transform.position);
+            if (distanceOnPath > cameraDistanceOnPath + despawnAheadDistance)
+                BeginDespawn();
+        }
+    }
+
+    private void BeginDespawn()
+    {
+        if (despawnStarted) return;
+        despawnStarted = true;
+        isMoving = false;
+
+        FadeController fader = GetComponent<FadeController>();
+        if (fader != null)
+        {
+            fader.FadeOut(fadeOutDuration);
+            Destroy(gameObject, fadeOutDuration);
+            return;
+        }
+
+        Destroy(gameObject);
     }
 }
-
-
-// using UnityEngine;
-
-// public class PrefabMove : MonoBehaviour
-// {
-//     public float speed = 0.01f;
-//     public bool isMoving = true;
-
-//     private void Update()
-//     {
-//         transform.position += transform.forward * speed * Time.deltaTime;
-//     }
-
-//     private void OnCollisionEnter(Collision collision)
-//     {
-//         float newY = Random.Range(0f, 360f);
-//         transform.rotation = Quaternion.Euler(0f, newY, 0f);
-//     }
-// }

@@ -56,6 +56,26 @@ public class NavigationRoute : MonoBehaviour
     public int CurrentWaypointIndex => nextWaypointIndex;
     public bool HasRoute => waypoints.Count > 0;
 
+    public bool TryGetRouteWorldPoints(out Vector3[] points)
+    {
+        points = Array.Empty<Vector3>();
+
+        if (!EnsureRouteLineRenderer())
+        {
+            return false;
+        }
+
+        int count = routeLineRenderer.positionCount;
+        if (count < 2)
+        {
+            return false;
+        }
+
+        points = new Vector3[count];
+        routeLineRenderer.GetPositions(points);
+        return true;
+    }
+
     public bool TryGetActiveWaypoint(out GeoLocation waypoint)
     {
         waypoint = default;
