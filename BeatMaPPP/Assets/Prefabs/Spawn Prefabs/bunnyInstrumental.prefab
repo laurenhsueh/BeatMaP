@@ -77,9 +77,6 @@ PrefabInstance:
       addedObject: {fileID: 4646298975704697239}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ea5b09ea2a7a43e6869a3c551c79769, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2689089745668119549}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ea5b09ea2a7a43e6869a3c551c79769, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4908564424063758131}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ea5b09ea2a7a43e6869a3c551c79769, type: 3}
       insertIndex: -1
@@ -93,6 +90,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ea5b09ea2a7a43e6869a3c551c79769, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3660750322407446413}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ea5b09ea2a7a43e6869a3c551c79769, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4914830208120330251}
   m_SourcePrefab: {fileID: 100100000, guid: 8ea5b09ea2a7a43e6869a3c551c79769, type: 3}
 --- !u!4 &496928385635432710 stripped
 Transform:
@@ -126,26 +126,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2689089745668119549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8078736344585424065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b7131529c4b2416f9377ef0234db5a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InstrumentalTrack
-  prefab: {fileID: 8078736344585424065}
-  minDistance: 1.5
-  maxDistance: 3.5
-  horizontalSpread: 1.5
-  verticalSpread: 1.5
-  fadeInDuration: 0.5
-  fadeOutDuration: 0.5
-  lifetime: 10
 --- !u!54 &4908564424063758131
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -380,3 +360,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-4914830208120330251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8078736344585424065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b7131529c4b2416f9377ef0234db5a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InstrumentalTrack
+  prefab: {fileID: 8078736344585424065}
+  minDistance: 1.5
+  maxDistance: 3.5
+  horizontalSpread: 1.5
+  verticalSpread: 1.5
+  fadeInDuration: 0.5
+  fadeOutDuration: 0.5
+  lifetime: 5
+  moveSpeed: 0.00000001

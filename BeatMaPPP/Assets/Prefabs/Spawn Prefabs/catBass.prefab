@@ -77,9 +77,6 @@ PrefabInstance:
       addedObject: {fileID: 8589204629132717176}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e3a32864baa594275a763e6eacef86e2, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -6281480168033114772}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e3a32864baa594275a763e6eacef86e2, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -7614733155180341912}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e3a32864baa594275a763e6eacef86e2, type: 3}
       insertIndex: -1
@@ -121,26 +118,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-6281480168033114772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226845507414439109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a739615b0ba20425bb26bd2685d76363, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BassTrack
-  prefab: {fileID: 1226845507414439109}
-  minDistance: 1.5
-  maxDistance: 3.5
-  horizontalSpread: 1.5
-  verticalSpread: 1.5
-  fadeInDuration: 0.5
-  fadeOutDuration: 0.5
-  lifetime: 10
 --- !u!54 &-7614733155180341912
 Rigidbody:
   m_ObjectHideFlags: 0

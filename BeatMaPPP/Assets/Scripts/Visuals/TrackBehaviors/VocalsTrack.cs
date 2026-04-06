@@ -12,7 +12,7 @@ public class VocalsTrack : BaseBehavior
         {
             PrefabMove mover = spawned.AddComponent<PrefabMove>();
             mover.speed = moveSpeed;
-            spawned.AddComponent<IdleSwitch>();
+            // spawned.AddComponent<IdleSwitch>();
             Debug.Log("Vocals visual spawned.");
         }
 

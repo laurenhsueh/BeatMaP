@@ -77,9 +77,6 @@ PrefabInstance:
       addedObject: {fileID: 6001348886683990948}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8747fb3125a9e4cc7b6ed740c0c2f40d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7289594189615686512}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8747fb3125a9e4cc7b6ed740c0c2f40d, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -3154071935145998874}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8747fb3125a9e4cc7b6ed740c0c2f40d, type: 3}
       insertIndex: -1
@@ -126,26 +123,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7289594189615686512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5622337049806806378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77b6db71eb4d94ccd84c82a71a28fdc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GuitarTrack
-  prefab: {fileID: 5622337049806806378}
-  minDistance: 1.5
-  maxDistance: 3.5
-  horizontalSpread: 1.5
-  verticalSpread: 1.5
-  fadeInDuration: 0.5
-  fadeOutDuration: 0.5
-  lifetime: 10
 --- !u!54 &-3154071935145998874
 Rigidbody:
   m_ObjectHideFlags: 0

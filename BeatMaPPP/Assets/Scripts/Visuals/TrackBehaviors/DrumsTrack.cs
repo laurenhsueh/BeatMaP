@@ -12,7 +12,7 @@ public class DrumsTrack : BaseBehavior
         {
             PrefabMove mover = spawned.AddComponent<PrefabMove>();
             mover.speed = moveSpeed;
-            spawned.AddComponent<IdleSwitch>();
+            // spawned.AddComponent<IdleSwitch>();
             Debug.Log("Drums visual spawned.");
         }
 

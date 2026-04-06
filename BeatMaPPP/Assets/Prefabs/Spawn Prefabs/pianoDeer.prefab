@@ -77,9 +77,6 @@ PrefabInstance:
       addedObject: {fileID: 6139148373275834985}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 83374035158ea49319d9eea035334976, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2783863653317072662}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 83374035158ea49319d9eea035334976, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -6548137752727277321}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 83374035158ea49319d9eea035334976, type: 3}
       insertIndex: -1
@@ -93,6 +90,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 83374035158ea49319d9eea035334976, type: 3}
       insertIndex: -1
       addedObject: {fileID: -7555016033702402548}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 83374035158ea49319d9eea035334976, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4345853157844920067}
   m_SourcePrefab: {fileID: 100100000, guid: 83374035158ea49319d9eea035334976, type: 3}
 --- !u!1 &964536390901803047 stripped
 GameObject:
@@ -121,26 +121,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2783863653317072662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 964536390901803047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d0c35bd6ac9c4914b422b1aade984d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PianoTrack
-  prefab: {fileID: 964536390901803047}
-  minDistance: 1.5
-  maxDistance: 3.5
-  horizontalSpread: 1.5
-  verticalSpread: 1.5
-  fadeInDuration: 0.5
-  fadeOutDuration: 0.5
-  lifetime: 10
 --- !u!54 &-6548137752727277321
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -375,6 +355,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-4345853157844920067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964536390901803047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d0c35bd6ac9c4914b422b1aade984d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PianoTrack
+  prefab: {fileID: 964536390901803047}
+  minDistance: 1.5
+  maxDistance: 3.5
+  horizontalSpread: 1.5
+  verticalSpread: 1.5
+  fadeInDuration: 0.5
+  fadeOutDuration: 0.5
+  lifetime: 5
+  moveSpeed: 0.00000001
 --- !u!4 &4667616499316286810 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4511088312989945812, guid: 83374035158ea49319d9eea035334976, type: 3}

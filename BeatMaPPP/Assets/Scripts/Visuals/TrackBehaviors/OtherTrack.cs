@@ -12,7 +12,7 @@ public class OtherTrack : BaseBehavior
         {
             PrefabMove mover = spawned.AddComponent<PrefabMove>();
             mover.speed = moveSpeed;
-            spawned.AddComponent<IdleSwitch>();
+            // spawned.AddComponent<IdleSwitch>();
             Debug.Log("Other visual spawned.");
         }
 

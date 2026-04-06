@@ -36,7 +36,7 @@ public class GuitarTrack : BaseBehavior
         {
             PrefabMove mover = spawned.AddComponent<PrefabMove>();
             mover.speed = moveSpeed;
-            spawned.AddComponent<IdleSwitch>();
+            // spawned.AddComponent<IdleSwitch>();
             Debug.Log("Guitar visual spawned.");
         }
 

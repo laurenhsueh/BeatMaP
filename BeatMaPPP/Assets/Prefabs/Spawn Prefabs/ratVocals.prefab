@@ -77,9 +77,6 @@ PrefabInstance:
       addedObject: {fileID: 7476010458534676394}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f5a6da9d6befd4dc9bab86d90836140c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4591612613175279048}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f5a6da9d6befd4dc9bab86d90836140c, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 3989856043570113656}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f5a6da9d6befd4dc9bab86d90836140c, type: 3}
       insertIndex: -1
@@ -93,6 +90,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f5a6da9d6befd4dc9bab86d90836140c, type: 3}
       insertIndex: -1
       addedObject: {fileID: -7171734645664333129}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f5a6da9d6befd4dc9bab86d90836140c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5606662151127494576}
   m_SourcePrefab: {fileID: 100100000, guid: f5a6da9d6befd4dc9bab86d90836140c, type: 3}
 --- !u!4 &3836143904061680484 stripped
 Transform:
@@ -126,26 +126,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4591612613175279048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6434076172223579125}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82a1ae12935484644a494ca1ed6d6885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VocalsTrack
-  prefab: {fileID: 6434076172223579125}
-  minDistance: 1.5
-  maxDistance: 3.5
-  horizontalSpread: 1.5
-  verticalSpread: 1.5
-  fadeInDuration: 0.5
-  fadeOutDuration: 0.5
-  lifetime: 10
 --- !u!54 &3989856043570113656
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -380,3 +360,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5606662151127494576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6434076172223579125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82a1ae12935484644a494ca1ed6d6885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VocalsTrack
+  prefab: {fileID: 6434076172223579125}
+  minDistance: 1.5
+  maxDistance: 3.5
+  horizontalSpread: 1.5
+  verticalSpread: 1.5
+  fadeInDuration: 0.5
+  fadeOutDuration: 0.5
+  lifetime: 5
+  moveSpeed: 0.00000001
