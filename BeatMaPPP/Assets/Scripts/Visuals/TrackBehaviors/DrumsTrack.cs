@@ -4,7 +4,6 @@ public class DrumsTrack : BaseBehavior
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float behindDistance = 2f;
-    [SerializeField] private float spawnHeightOffset = 0f;
 
     protected override Vector3 GetSpawnPosition()
     {

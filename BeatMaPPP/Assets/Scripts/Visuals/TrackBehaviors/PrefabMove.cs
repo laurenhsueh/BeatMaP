@@ -11,9 +11,15 @@ public class PrefabMove : MonoBehaviour
     [SerializeField] private float yOffset = 0f;
     [SerializeField] private float fadeOutDuration = 0.35f;
 
+    private Vector3 moveDirection;
     private float distanceOnPath;
     private bool hasDistanceOnPath;
     private bool despawnStarted;
+
+    public void SetDirection(Vector3 direction)
+    {
+        moveDirection = direction.normalized;
+    }
 
     private void Update()
     {

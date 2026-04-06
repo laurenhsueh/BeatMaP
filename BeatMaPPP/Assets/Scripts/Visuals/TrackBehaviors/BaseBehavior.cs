@@ -7,7 +7,7 @@ public abstract class BaseBehavior : MonoBehaviour
     [SerializeField] protected float spawnDistance = 2f;
     [SerializeField] private bool useNavigationPath = true;
     [SerializeField] private float spawnBehindPlayerDistance = 2f;
-    [SerializeField] private float spawnHeightOffset = 0f;
+    [SerializeField] protected float spawnHeightOffset = 0f;
 
     [SerializeField] private float fadeInDuration = 0.5f;
     [SerializeField] private float fadeOutDuration = 0.5f;
