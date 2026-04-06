@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>420673546935-742in8kntup4bkbak1579fc6s1vnian6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.420673546935-742in8kntup4bkbak1579fc6s1vnian6</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCoV6BV4s0AVoJPDyM8GQIBadYzkocYYi8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>420673546935</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.Artfail.DevDemo</string>
+	<key>PROJECT_ID</key>
+	<string>unity-app-db</string>
+	<key>STORAGE_BUCKET</key>
+	<string>unity-app-db.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:420673546935:ios:4d48466853aaa64d257b32</string>
+	<key>DATABASE_URL</key>
+	<string>https://unity-app-db-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
